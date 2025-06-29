@@ -13,6 +13,7 @@ from livekit.agents import (
     function_tool,     # ← new decorator
     RunContext,        # ← gives you access to session, room, etc.
 )
+from livekit import api
 import time
 import asyncio
 import json
@@ -59,8 +60,15 @@ class InsuranceAssistant(Agent):
     @function_tool(name="send_dtmf", description="Press a phone keypad digit on the live call")
     async def send_dtmf(self, ctx: RunContext, digits: str) -> str:
         """Press DTMF digits on the live phone call."""
-        await ctx.session.say("pretending to press digits")
+        await ctx.session.say(f"pretending to press {digits}")
         return None
+    @function_tool(name = "hangup", description = "if you are ever stuck with no way to go or have all information you need make this call")
+    async def hangup(self):
+        await api.RoomService.delete_room(
+                api.DeleteRoomRequest(room="insurance-call-001")
+            )
+        return
+
 
     # -------- internal helpers --------------------------------------
     def _base_system_prompt(self, last_user):
@@ -68,7 +76,7 @@ class InsuranceAssistant(Agent):
         return (
             "You are a dental office receptionist named Sarah from Valley Green Dental calling an insurance company to verify patient coverage. You may be talking to a human or a robot agent. In the case of a robot agent you will see phrases like press, and enter in which situations you should call the functions given to you "
             "Your job is to ask questions to collect the information; when greeted simply say what you are there for; verifying coverage for a patient. Ask questions one by one not all at a time and do it incrementally"
-            "Speak clearly and briefly max 15 words. You may be asked to provide some information don't provide info without being asked first"
+            "Speak clearly and briefly max 15 words. You may be asked to provide some information such as patient name and date of birth don't provide info without being asked first"
             "Sound like a human add filler words like like and umm to make it more natural. your main focus is to get the answer to the question be polite and introduce yourself you need to be answering and asking questions to get the answers to the questions that are given to you nothing more than that"
             f"Patient: {CALL_CONTEXT['patient_name']} "
             f"(DOB {CALL_CONTEXT['patient_dob']}), "
@@ -141,7 +149,7 @@ async def entrypoint(ctx: JobContext):
          ],
       )
 
-    await background_audio.start(room=ctx.room, agent_session=session)
+    
 
     await session.start(
         room=ctx.room,
