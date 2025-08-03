@@ -9,15 +9,6 @@ import openai
 app = Flask(__name__)
 CALL_CONTEXT = {}
 # ── CONFIG ─────────────────────────────────────────────────────────────────────
-TWILIO_SID   = "ACf0310d612d324f85cbe4eee2d83caaea"
-TWILIO_TOKEN = "7b28e5855bedee068d9adce5361abdf9"
-TWILIO_NUM   = "+18776783869"   # your Twilio number
-PAYER_NUM    = "+19255492810"   # e.g. "+18005551234"
-client       = Client(TWILIO_SID, TWILIO_TOKEN)
-openai.api_key = "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"
-GOOGLE_API_KEY= "AIzaSyCMsTwEm_edJVSz9G7jJ_yjyUrKQVEZqbA"
-TTS_URL = f"https://texttospeech.googleapis.com/v1/text:synthesize?key={GOOGLE_API_KEY}"
-LOCAL_URL = "https://good-teeth-chew.loca.lt"
 # ── ENDPOINTS ──────────────────────────────────────────────────────────────────
 FIELDS = [
     "annual maximum benefit",
