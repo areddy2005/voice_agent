@@ -29,7 +29,7 @@ class GPTClient:
     Simple OpenAI GPT client wrapper.
     """
     def __init__(self, model: str = "gpt-4o-mini"):
-        openai.api_key = "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"
+        ##openai.api_key = "YOUR_OPENAI_API_KEY"
         self.model = model
         self.system_messages = [
             {"role":"system","content":"You are an expert in insurance denials and reading and deducing why claims were denied."},
